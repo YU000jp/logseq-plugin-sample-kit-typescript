@@ -1,5 +1,7 @@
 # Logseq Plugin: Sample Kit for TypeScript
 
+<!-- 
+
 - Not published yet 👷🚧
 
 > [Release](https://github.com/YU000jp/logseq-plugin-sample-kit-typescript/releases) information is on the right. Load files at developer mode.
@@ -8,6 +10,8 @@
 [![Downloads](https://img.shields.io/github/downloads/YU000jp/logseq-plugin-sample-kit-typescript/total.svg)](https://github.com/YU000jp/logseq-plugin-sample-kit-typescript/releases)
 
 ---
+
+-->
 
 <!-- start doc -->
 
@@ -39,6 +43,8 @@
 
 <!-- end -->
 
+<!--
+
 ## Features
 
 1. A
@@ -52,3 +58,5 @@
 ### Install from Logseq Marketplace (Coming👷🚧)
 
 - Press [`---`] on the top right toolbar to open [`Plugins`]. Select marketplace. Type `WORD` in the search field, select it from the search results and install
+
+-->
