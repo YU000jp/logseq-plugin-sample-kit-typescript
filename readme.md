@@ -31,6 +31,7 @@
    - During plugin development, reload from the plugin screen after changes have been made.
 - Document Link
   1. https://plugins-doc.logseq.com/
+  1. https://github.com/logseq/logseq-plugin-samples
 
 ## Steps to publish a plugin
 
