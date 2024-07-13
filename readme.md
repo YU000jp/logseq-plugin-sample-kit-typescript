@@ -29,9 +29,13 @@
 1. "pnpm build" will generate an executable folder (converted to JavaScript).
    - It can now be loaded from developer mode.
    - During plugin development, reload from the plugin screen after changes have been made.
-- Document Link
+- Document Link:
   1. https://plugins-doc.logseq.com/
   1. https://github.com/logseq/logseq-plugin-samples
+  1. https://correctroad.gitbook.io/logseq-plugins-in-action (👲Chinese)
+- Note:
+  1. The kit incorporates [logseq-l10n](https://github.com/sethyuan/logseq-l10n) so that translation by L10N can be provided.
+     - When describing user messages, use `t("string")`.
 
 ## Steps to publish a plugin
 
