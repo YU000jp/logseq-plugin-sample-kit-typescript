@@ -1,5 +1,7 @@
 # Logseq Plugin: Sample Kit for TypeScript
 
+- Sample kit for a simple Logseq plugin that does not require React or other tools.
+
 <!-- 
 
 - Not published yet 👷🚧
