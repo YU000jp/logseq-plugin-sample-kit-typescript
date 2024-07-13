@@ -1,12 +1,12 @@
 {
     "name": "logseq-plugin-sample-kit-typescript",
-    "description": "",
+    "description": "description here",
     "repository": "https://github.com/YU000jp/logseq-plugin-sample-kit-typescript.git",
     "author": "YU000jp",
     "license": "MIT",
     "logseq": {
         "id": "logseq-plugin-sample-kit-typescript",
-        "title": "Template TypeScript",
+        "title": "Sample Kit",
         "icon": "./icon.svg",
         "main": "./dist/index.html"
     },
