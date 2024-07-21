@@ -19,7 +19,7 @@
 
 ## Preparing the repository
 
-1. Clone this repository or use it as a template to create a new repository.
+1. Clone this repository or use it as a template to create a new repository. ![image](https://github.com/user-attachments/assets/dcf349bc-fb96-4d4e-afa7-e26aca1efb9d)
    - Configure the workflow permissions for the repository." Select "Read and write permissions". (Settings > Actions > General)
 1. Match repository name, etc.
    - Replace all of the strings "YU000jp/logseq-plugin-sample-kit-typescript" in files in the folder.
