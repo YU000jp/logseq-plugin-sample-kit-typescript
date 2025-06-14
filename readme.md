@@ -1,4 +1,4 @@
-# Logseq Plugin Sample Kit for TypeScript
+# Logseq Plugin Sample Kit (TypeScript)
 
 -   Sample kit for a simple Logseq plugin that does not require React or other tools.
 
