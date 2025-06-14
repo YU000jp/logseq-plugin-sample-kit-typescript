@@ -12,7 +12,7 @@
     - [Logseq L10N Generate JSON-file](https://github.com/YU000jp/logseq-l10n-generate-json), [Logseq L10N Clone JSON-file](https://github.com/YU000jp/logseq-l10n-clone-json)
 
 1. **Logseq Model Check**:
-    - The plugin checks whether the current graph is File-based or DB-based.
+    - The plugin checks whether the current graph is File-based model or DB model (File-based graph or DB graph).
     - It updates the plugin's behavior and UI accordingly.
     - See `src/logseqModelCheck.ts` for implementation details.
 
