@@ -1,5 +1,6 @@
 import { AppInfo } from "@logseq/libs/dist/LSPlugin"
-import { replaceLogseqDbGraph, replaceLogseqMdModel, replaceLogseqVersion } from "."
+import { PLUGIN_ID, replaceLogseqDbGraph, replaceLogseqMdModel, replaceLogseqVersion } from "."
+import { settingsTemplate } from "./settings"
 
 // Check if the model is Markdown-based. Returns false for DB models.
 const checkLogseqVersion = async (): Promise<boolean> => {
@@ -29,7 +30,7 @@ const showDbGraphIncompatibilityMsg = () => {
         logseq.updateSettings({
             warningMessageShownDbGraph: true
         })
-        logseq.UI.showMsg("The ’Page-tags and Hierarchy’ plugin does not support Logseq DB graph.", "warning", { timeout: 5000 })
+        logseq.UI.showMsg(`The ’${PLUGIN_ID}’ plugin does not support Logseq DB graph.`, "warning", { timeout: 5000 })
     }
     return
 }
@@ -48,29 +49,28 @@ export const logseqModelCheck = async (): Promise<boolean[]> => {
     // Wait for 100ms
     await new Promise(resolve => setTimeout(resolve, 100))
 
-    if (logseqDbGraph === true) {
-        // Not supported for DB graph
-        showDbGraphIncompatibilityMsg()
-    }
+    // if (logseqDbGraph === true) {
+    //     // Not supported for DB graph
+    //     showDbGraphIncompatibilityMsg()
+    // }
 
     logseq.App.onCurrentGraphChanged(async () => { // Callback when the graph changes
 
         const logseqDbGraph = await checkLogseqDbGraph()
-        if (logseqDbGraph === true) {
-            // Not supported for DB graph
-            showDbGraphIncompatibilityMsg()
+        // if (logseqDbGraph === true) {
+        //     // Not supported for DB graph
+        //     showDbGraphIncompatibilityMsg()
 
-            // Remove unused <style> elements
+        //     // Remove unused <style> elements
 
 
-        } else {
-            // Set styles according to the model
-            
+        // } else {
+        //     // Set styles according to the model
 
-        }
-        /* Update user settings */
-        
-        
+
+        // }
+        // Reload settings schema
+        logseq.useSettingsSchema(settingsTemplate(logseqDbGraph, logseqMdModel))
     })
     return [logseqDbGraph, logseqMdModel] // Return [isDbGraph, isMdModel]
 }

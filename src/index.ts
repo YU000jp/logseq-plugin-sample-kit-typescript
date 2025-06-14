@@ -4,7 +4,7 @@ import { logseqModelCheck } from './logseqModelCheck'
 import { settingsTemplate } from './settings'
 import { loadLogseqL10n } from './translations/l10nSetup'
 
-const PLUGIN_ID = 'logseq-plugin-template-typescript' // Plugin ID
+export const PLUGIN_ID = 'logseq-plugin-template-typescript' // Plugin ID
 export const consoleText = PLUGIN_ID + " :: "
 
 // Variables (used within the same module, not exported)
