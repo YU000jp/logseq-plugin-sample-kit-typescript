@@ -18,22 +18,22 @@
         "prod": "vite build"
     },
     "dependencies": {
-        "@logseq/libs": "^0.0.17",
+        "@logseq/libs": "0.2.3",
         "logseq-l10n": "^0.2.0"
     },
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
         "@semantic-release/exec": "^7.1.0",
         "@semantic-release/git": "^10.0.1",
-        "@types/node": "^24.0.1",
-        "conventional-changelog-conventionalcommits": "^9.0.0",
+        "@types/node": "^24.9.2",
+        "conventional-changelog-conventionalcommits": "^9.1.0",
         "cz-conventional-changelog": "^3.3.0",
-        "jest": "^30.0.0",
+        "jest": "^30.2.0",
         "npx": "^10.2.2",
         "rollup-plugin-string": "^3.0.0",
-        "semantic-release": "^24.2.5",
-        "typescript": "^5.8.3",
-        "vite": "^6.3.5",
+        "semantic-release": "^24.2.9",
+        "typescript": "^5.9.3",
+        "vite": "^6.4.1",
         "vite-plugin-logseq": "^1.1.2"
     },
     "config": {
