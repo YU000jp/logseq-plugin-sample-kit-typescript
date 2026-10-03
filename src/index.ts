@@ -9,12 +9,12 @@ export const consoleText = PLUGIN_ID + " :: "
 
 // Variables (used within the same module, not exported)
 let logseqVersion: string = "" // For version checking
-let logseqMdModel: boolean = false // For model checking
+let logseqMdModel: boolean = false // For file-based graph checking
 let logseqDbGraph: boolean = false // For DB graph checking
 // Exported for external reference
 export const getLogseqVersion = () => logseqVersion // For version checking
 export const replaceLogseqVersion = (version: string) => logseqVersion = version
-export const booleanLogseqMdModel = () => logseqMdModel // For model checking
+export const booleanLogseqMdModel = () => logseqMdModel // For file-based graph checking
 export const replaceLogseqMdModel = (mdModel: boolean) => logseqMdModel = mdModel
 
 export const booleanDbGraph = () => logseqDbGraph // For DB graph checking
@@ -38,9 +38,8 @@ const main = async () => {
   // Execute Logseq model check
   const [logseqDbGraph, logseqMdModel] = await logseqModelCheck()
   /**
-    * logseqMdModel===true: MD model
-    + logseqMdModel===false: DB model
-    + logseqMdModel===false && logseqDbGraph===false: file-based graph
+    * logseqMdModel means "the current graph is file-based" (= !logseqDbGraph)
+    + logseqMdModel===true && logseqDbGraph===false: file-based graph
     * logseqMdModel===false && logseqDbGraph===true: DB graph
     */
 

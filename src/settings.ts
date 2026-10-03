@@ -17,68 +17,50 @@ const settingKeys = {
  * based on the current graph and model type.
  *
  * @param logseqDbGraph - Indicates if the current graph is a DB-based graph (`true`) or file-based (`false`).
- * @param logseqMdModel - Indicates if the current model is file-based (`true`) or DB model (`false`).
+ * @param logseqMdModel - Indicates if the current graph is file-based (`true`) or a DB graph (`false`). Always `!logseqDbGraph`.
  * @returns An array of `SettingSchemaDesc` objects representing the settings schema for the plugin.
  *
- * The function determines the settings schema to return based on the combination of `logseqDbGraph` and `logseqMdModel`:
- * - If `logseqMdModel` is `true`, returns settings for the file-based model.
- * - If `logseqMdModel` is `false` and `logseqDbGraph` is `false`, returns settings for a file-based graph in DB model.
- * - If `logseqMdModel` is `false` and `logseqDbGraph` is `true`, returns settings for a DB graph.
- * 
+ * The function determines the settings schema to return based on the current graph type:
+ * - If `logseqMdModel` is `true`, returns settings for a file-based graph.
+ * - If `logseqDbGraph` is `true`, returns settings for a DB graph.
+ *
  * In each case, a heading and common settings are included, and additional settings are conditionally added
  * if the `toggle001` setting is enabled.
- * 
- * Also displays a message in the Logseq UI and logs the detected model/graph type to the console.
+ *
+ * Also displays a message in the Logseq UI and logs the detected graph type to the console.
  */
 export const settingsTemplate = (logseqDbGraph: boolean, logseqMdModel: boolean): SettingSchemaDesc[] => {
     if (logseqMdModel === true) {
-        // file-based model specific initialization
-        console.log(consoleText + "File-based model detected.")
-        logseq.UI.showMsg(consoleText + "file-based model", "info", { timeout: 6000 })
+        // file-based graph specific initialization
+        console.log(consoleText + "File-based graph detected.")
+        logseq.UI.showMsg(consoleText + "file-based graph", "info", { timeout: 6000 })
         return [
             {
                 key: settingKeys.heading000,
                 type: "heading",
-                title: "File-based Model Settings",
+                title: "File-based Graph Settings",
                 default: "",
-                description: "Settings for File-based Model.",
+                description: "Settings for File-based Graph.",
             },
             ...commonSettings(),
             ...(logseq.settings!["toggle001"] as boolean ? toggle001True() : []), // Add new item only when Toggle 1 is true
         ]
-    } else // DB model
-        if (logseqDbGraph === false) {
-            // file-based graph specific initialization
-            console.log(consoleText + "File-based graph detected. (DB model)")
-            logseq.UI.showMsg(consoleText + "fileBased graph + DB model", "info", { timeout: 6000 })
-            return [
-                {
-                    key: settingKeys.heading000,
-                    type: "heading",
-                    title: "File-based Graph Settings (DB Model)",
-                    default: "",
-                    description: "Settings for File-based Graph in DB Model.",
-                },
-                ...commonSettings(),
-                ...(logseq.settings!["toggle001"] as boolean ? toggle001True() : []), // Add new item only when Toggle 1 is true
-            ]
-        } else
-            if (logseqDbGraph === true) {
-                // DB graph specific initialization
-                console.log(consoleText + "DB graph detected.")
-                logseq.UI.showMsg(consoleText + "DB graph + DB model", "info", { timeout: 6000 })
-                return [
-                    {
-                        key: settingKeys.heading000,
-                        type: "heading",
-                        title: "File-based Graph Settings (DB Model)",
-                        default: "",
-                        description: "Settings for DB graph.",
-                    },
-                    ...commonSettings(),
-                    ...(logseq.settings!["toggle001"] as boolean ? toggle001True() : []), // Add new item only when Toggle 1 is true
-                ]
-            }
+    } else if (logseqDbGraph === true) {
+        // DB graph specific initialization
+        console.log(consoleText + "DB graph detected.")
+        logseq.UI.showMsg(consoleText + "DB graph", "info", { timeout: 6000 })
+        return [
+            {
+                key: settingKeys.heading000,
+                type: "heading",
+                title: "DB Graph Settings",
+                default: "",
+                description: "Settings for DB graph.",
+            },
+            ...commonSettings(),
+            ...(logseq.settings!["toggle001"] as boolean ? toggle001True() : []), // Add new item only when Toggle 1 is true
+        ]
+    }
     return [] // Default empty array if no conditions match
 }
 

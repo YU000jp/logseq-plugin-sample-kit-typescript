@@ -1,32 +1,33 @@
-import { AppInfo } from "@logseq/libs/dist/LSPlugin"
 import { PLUGIN_ID, replaceLogseqDbGraph, replaceLogseqMdModel, replaceLogseqVersion } from "."
 import { settingsTemplate } from "./settings"
 
-// Check if the model is Markdown-based. Returns false for DB models.
-const checkLogseqVersion = async (): Promise<boolean> => {
-    const logseqInfo = (await logseq.App.getInfo("version")) as AppInfo | any
+// Guard so that only the latest detection may update the flags (graph changes are async)
+let latestCheckId = 0
+
+// Fetch the app version and store it (informational only; never used for graph-type detection).
+const fetchAppVersion = async (): Promise<void> => {
+    const logseqInfo = (await logseq.App.getInfo("version")) as unknown
     // The version format is like "0.11.0" or "0.11.0-alpha+nightly.20250427".
-    // Extract the first three numeric parts (1-digit, 2-digit, 2-digit) using a regular expression.
-    const version = logseqInfo.match(/(\d+)\.(\d+)\.(\d+)/)
-    if (version) {
-        replaceLogseqVersion(version[0]) // Update the version
-        // If the version is 0.10.* or lower, set logseqVersionMd to true.
-        if (version[0].match(/0\.([0-9]|10)\.\d+/)) {
-            return true
-        }
-    } else {
-        replaceLogseqVersion("0.0.0") // Update the version
-    }
-    return false
+    const version = typeof logseqInfo === "string" ? logseqInfo : "0.0.0"
+    const match = version.match(/(\d+)\.(\d+)\.(\d+)/)
+    replaceLogseqVersion(match ? match[0] : version)
 }
 
-// Check if the graph is a DB graph. Returns true only for DB graphs.
-const checkLogseqDbGraph = async (): Promise<boolean> => (logseq.App as any).checkCurrentIsDbGraph() as boolean || false
+// Check if the current graph is a DB graph. Returns null when detection fails
+// (a rejected call or a non-boolean value, e.g. on 0.10.x hosts where the API does
+// not exist — logseq.App is a dynamic proxy, so a typeof guard is useless).
+const checkLogseqDbGraph = async (): Promise<boolean | null> => {
+    try {
+        const value = await logseq.App.checkCurrentIsDbGraph()
+        return typeof value === "boolean" ? value : null
+    } catch {
+        return null
+    }
+}
 
-// Show a warning message if the graph is a DB graph and limit the message to 3 times.
+// Show a warning message if the graph is a DB graph (only once).
 const showDbGraphIncompatibilityMsg = () => {
     if (!logseq.settings!.warningMessageShownDbGraph) {
-        // Do not show the notification after the third time. Increment the count.
         logseq.updateSettings({
             warningMessageShownDbGraph: true
         })
@@ -36,41 +37,42 @@ const showDbGraphIncompatibilityMsg = () => {
 }
 
 /**
- * Checks the Logseq model type (Markdown or DB) and handles related state and UI updates.
- * @returns Promise<boolean[]> - [isDbGraph, isMdModel]
+ * Checks whether the current graph is a DB graph or a file-based graph, and handles related state and UI updates.
+ * `logseqMdModel` means "the current graph is file-based" (= `!isDbGraph`), not derived from the app version.
+ * It is also true on DB-era apps (0.11+/2.x) running a file graph and on Logseq OG 1.x.
+ * @returns Promise<boolean[]> - [isDbGraph, isFileGraph]
  */
 export const logseqModelCheck = async (): Promise<boolean[]> => {
-    const logseqMdModel = await checkLogseqVersion() // Check if it's an MD model
-    replaceLogseqMdModel(logseqMdModel)
-    const logseqDbGraph = logseqMdModel === true ?
-        false
-        : await checkLogseqDbGraph() // Check if it's a DB Model
-    replaceLogseqDbGraph(logseqDbGraph)
+    await fetchAppVersion() // Save the app version (informational only; not used for graph-type detection)
+    const checkId = ++latestCheckId
+    const detected = await checkLogseqDbGraph() // Whether the current graph is a DB graph
+    // Detection failure = a legacy host without the API, which cannot open DB graphs → file graph
+    const isDbGraph = detected ?? false
+    if (checkId === latestCheckId) { // Update the flags only if no newer detection has started
+        replaceLogseqDbGraph(isDbGraph)
+        replaceLogseqMdModel(!isDbGraph)
+    }
     // Wait for 100ms
     await new Promise(resolve => setTimeout(resolve, 100))
 
-    // if (logseqDbGraph === true) {
+    // if (isDbGraph === true) {
     //     // Not supported for DB graph
     //     showDbGraphIncompatibilityMsg()
     // }
 
     logseq.App.onCurrentGraphChanged(async () => { // Callback when the graph changes
-
-        const logseqDbGraph = await checkLogseqDbGraph()
-        // if (logseqDbGraph === true) {
+        const id = ++latestCheckId
+        const isDb = await checkLogseqDbGraph()
+        // Keep the previous flags when detection fails, and discard stale results
+        if (id !== latestCheckId || isDb === null) return
+        replaceLogseqDbGraph(isDb)
+        replaceLogseqMdModel(!isDb)
+        // if (isDb === true) {
         //     // Not supported for DB graph
         //     showDbGraphIncompatibilityMsg()
-
-        //     // Remove unused <style> elements
-
-
-        // } else {
-        //     // Set styles according to the model
-
-
         // }
         // Reload settings schema
-        logseq.useSettingsSchema(settingsTemplate(logseqDbGraph, logseqMdModel))
+        logseq.useSettingsSchema(settingsTemplate(isDb, !isDb))
     })
-    return [logseqDbGraph, logseqMdModel] // Return [isDbGraph, isMdModel]
+    return [isDbGraph, !isDbGraph] // Return [isDbGraph, isFileGraph]
 }
