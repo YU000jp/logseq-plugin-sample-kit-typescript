@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/YU000jp/logseq-plugin-sample-kit-typescript/compare/v1.1.0...v1.1.1) (2026-10-04)
+
+
+### Bug Fixes
+
+* グラフ種別判定を公式APIベースに修正し、MD判定をファイルグラフ判定に再定義 ([80f2499](https://github.com/YU000jp/logseq-plugin-sample-kit-typescript/commit/80f24996b55f74504ea257e83ea1f5a601c97858))
+
 # [1.1.0](https://github.com/YU000jp/logseq-plugin-sample-kit-typescript/compare/v1.0.0...v1.1.0) (2025-06-14)
 
 
